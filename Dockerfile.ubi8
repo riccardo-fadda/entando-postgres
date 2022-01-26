@@ -1,7 +1,7 @@
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.4-200
 
 RUN microdnf install -y wget
-RUN microdnf install https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+RUN wget https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
 RUN rpm -i pgdg-redhat-repo-latest.noarch.rpm
 RUN microdnf install postgresql14-server
 RUN microdnf install postgresql14-contrib
