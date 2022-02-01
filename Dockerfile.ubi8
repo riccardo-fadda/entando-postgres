@@ -8,11 +8,11 @@ RUN microdnf install -y dnf && \
             mkdir /var/lib/pgsql/data && \
             chown -R postgres:postgres /var/lib/pgsql/data
 
-EXPOSE 5432
-
 USER postgres
 RUN /usr/pgsql-14/bin/initdb -D /var/lib/pgsql/data && \
          echo "host all  all    0.0.0.0/0  md5" >> /var/lib/pgsql/data/pg_hba.conf && \
          echo "listen_addresses='*'" >> /var/lib/pgsql/data/postgresql.conf
+
+EXPOSE 5432
 
 CMD ["/usr/pgsql-14/bin/postgres", "-D", "/var/lib/pgsql/data", "-c", "config_file=/var/lib/pgsql/data/postgresql.conf"]
