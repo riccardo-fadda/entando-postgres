@@ -1,12 +1,17 @@
-FROM centos:8
+FROM rockylinux:8.5
 
-RUN dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm && \
-         dnf -qy module disable postgresql && \
-         dnf install -y postgresql14-server && \
-         dnf install -y postgresql14-contrib
-USER postgres
-RUN /usr/pgsql-14/bin/initdb -D /var/lib/pgsql/14/data && \
-         echo "host all  all    0.0.0.0/0  md5" >> //var/lib/pgsql/14/data/pg_hba.conf && \
-         echo "listen_addresses='*'" >> /var/lib/pgsql/14/data/postgresql.conf
+ENV PGDATA /var/lib/pgsql/data
+
+RUN dnf update -y && \
+            dnf install -y https://download.postgresql.org/pub/repos/yum/14/redhat/rhel-8-x86_64/postgresql14-server-14.1-1PGDG.rhel8.x86_64.rpm https://download.postgresql.org/pub/repos/yum/14/redhat/rhel-8-x86_64/postgresql14-libs-14.1-1PGDG.rhel8.x86_64.rpm https://download.postgresql.org/pub/repos/yum/14/redhat/rhel-8-x86_64/postgresql14-14.1-1PGDG.rhel8.x86_64.rpm https://download.postgresql.org/pub/repos/yum/14/redhat/rhel-8-x86_64/postgresql14-contrib-14.1-1PGDG.rhel8.x86_64.rpm && \
+            mkdir /var/lib/pgsql/data && \
+            chown -R postgres:postgres /var/lib/pgsql/data
+
 EXPOSE 5432
-CMD ["/usr/pgsql-14/bin/postgres", "-D", "/var/lib/pgsql/14/data", "-c", "config_file=/var/lib/pgsql/14/data/postgresql.conf"]
+
+USER postgres
+RUN /usr/pgsql-14/bin/initdb -D /var/lib/pgsql/data && \
+         echo "host all  all    0.0.0.0/0  md5" >> /var/lib/pgsql/data/pg_hba.conf && \
+         echo "listen_addresses='*'" >> /var/lib/pgsql/data/postgresql.conf
+
+CMD ["/usr/pgsql-14/bin/postgres", "-D", "/var/lib/pgsql/data", "-c", "config_file=/var/lib/pgsql/data/postgresql.conf"]
