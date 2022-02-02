@@ -2,17 +2,31 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal:8.4-200
 
 ENV PGDATA /var/lib/pgsql/data
 
+ENV PATH $PATH:/usr/lib/pgsql/bin
+
+ADD config.sh /
+
+COPY create_db.sh /docker-entrypoint-initdb.d/create_db.sh
+
+COPY docker-entrypoint.sh /
+
 RUN microdnf install -y dnf && \
             dnf update -y && \
             dnf install -y https://download.postgresql.org/pub/repos/yum/14/redhat/rhel-8-x86_64/postgresql14-server-14.1-1PGDG.rhel8.x86_64.rpm https://download.postgresql.org/pub/repos/yum/14/redhat/rhel-8-x86_64/postgresql14-libs-14.1-1PGDG.rhel8.x86_64.rpm https://download.postgresql.org/pub/repos/yum/14/redhat/rhel-8-x86_64/postgresql14-14.1-1PGDG.rhel8.x86_64.rpm https://download.postgresql.org/pub/repos/yum/14/redhat/rhel-8-x86_64/postgresql14-contrib-14.1-1PGDG.rhel8.x86_64.rpm && \
             mkdir /var/lib/pgsql/data && \
-            chown -R postgres:postgres /var/lib/pgsql/data
+            mkdir /var/lib/pgsql/log && \
+            chown -R postgres:postgres /var/lib/pgsql/data && \
+            chown -R postgres:postgres /var/lib/pgsql/log && \
+            chmod u+x  /docker-entrypoint.sh && \
+            chmod +x /docker-entrypoint-initdb.d/create_db.sh && \
+            chmod +x /config.sh
 
 USER postgres
-RUN /usr/pgsql-14/bin/initdb -D /var/lib/pgsql/data && \
-         echo "host all  all    0.0.0.0/0  md5" >> /var/lib/pgsql/data/pg_hba.conf && \
-         echo "listen_addresses='*'" >> /var/lib/pgsql/data/postgresql.conf
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
+STOPSIGNAL SIGINT
 
 EXPOSE 5432
 
-CMD ["/usr/pgsql-14/bin/postgres", "-D", "/var/lib/pgsql/data", "-c", "config_file=/var/lib/pgsql/data/postgresql.conf"]
+CMD ["/usr/pgsql-14/bin/postgres"]
