@@ -7,8 +7,6 @@ ENV POSTGRES_DB=${POSTGRES_DB}
 
 ENV PATH $PATH:/usr/lib/pgsql/bin
 
-ADD config.sh /
-
 COPY create_db.sh /docker-entrypoint-initdb.d/create_db.sh
 
 COPY docker-entrypoint.sh /
@@ -20,8 +18,7 @@ RUN dnf update -y && \
             chown -R postgres:postgres /var/lib/pgsql/data && \
             chown -R postgres:postgres /var/lib/pgsql/log && \
             chmod u+x  /docker-entrypoint.sh && \
-            chmod +x /docker-entrypoint-initdb.d/create_db.sh && \
-            chmod +x /config.sh
+            chmod +x /docker-entrypoint-initdb.d/create_db.sh
 
 USER postgres
 

@@ -4,8 +4,6 @@ ENV PGDATA /var/lib/pgsql/data
 
 ENV PATH $PATH:/usr/lib/pgsql/bin
 
-ADD config.sh /
-
 COPY create_db.sh /docker-entrypoint-initdb.d/create_db.sh
 
 COPY docker-entrypoint.sh /
@@ -18,8 +16,7 @@ RUN microdnf install -y dnf && \
             chown -R postgres:postgres /var/lib/pgsql/data && \
             chown -R postgres:postgres /var/lib/pgsql/log && \
             chmod u+x  /docker-entrypoint.sh && \
-            chmod +x /docker-entrypoint-initdb.d/create_db.sh && \
-            chmod +x /config.sh
+            chmod +x /docker-entrypoint-initdb.d/create_db.sh
 
 USER postgres
 
