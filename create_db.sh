@@ -3,8 +3,8 @@ set -e
 
 POSTGRES="psql --username ${POSTGRES_USER}"
 
-echo "Creating database: ${DB_NAME}"
+echo "Creating database: ${POSTGRES_DATABASE}"
 
 $POSTGRES <<EOSQL
-CREATE DATABASE ${DB_NAME} OWNER ${POSTGRES_USER};
+CREATE DATABASE ${POSTGRES_DATABASE} OWNER ${POSTGRES_USER};
 EOSQL
