@@ -7,18 +7,17 @@ ENV POSTGRESQL_DATABASE=${POSTGRESQL_DATABASE}
 ENV POSTGRESQL_ADMIN_PASSWORD=${POSTGRESQL_ADMIN_PASSWORD}
 ENV PATH $PATH:/usr/lib/pgsql/bin
 
-COPY create_db.sh /docker-entrypoint-initdb.d/create_db.sh
+RUN dnf update -y && \
+            dnf install -y \
+              https://download.postgresql.org/pub/repos/yum/14/redhat/rhel-8-x86_64/postgresql14-server-14.1-1PGDG.rhel8.x86_64.rpm \
+              https://download.postgresql.org/pub/repos/yum/14/redhat/rhel-8-x86_64/postgresql14-libs-14.1-1PGDG.rhel8.x86_64.rpm \
+              https://download.postgresql.org/pub/repos/yum/14/redhat/rhel-8-x86_64/postgresql14-14.1-1PGDG.rhel8.x86_64.rpm \
+              https://download.postgresql.org/pub/repos/yum/14/redhat/rhel-8-x86_64/postgresql14-contrib-14.1-1PGDG.rhel8.x86_64.rpm && \
+            mkdir -p "$PGDATA/log" && \
+            chown -R postgres:postgres "$PGDATA/log";
 
 COPY docker-entrypoint.sh /
-
-RUN dnf update -y && \
-            dnf install -y https://download.postgresql.org/pub/repos/yum/14/redhat/rhel-8-x86_64/postgresql14-server-14.1-1PGDG.rhel8.x86_64.rpm https://download.postgresql.org/pub/repos/yum/14/redhat/rhel-8-x86_64/postgresql14-libs-14.1-1PGDG.rhel8.x86_64.rpm https://download.postgresql.org/pub/repos/yum/14/redhat/rhel-8-x86_64/postgresql14-14.1-1PGDG.rhel8.x86_64.rpm https://download.postgresql.org/pub/repos/yum/14/redhat/rhel-8-x86_64/postgresql14-contrib-14.1-1PGDG.rhel8.x86_64.rpm && \
-            mkdir /var/lib/pgsql/data && \
-            mkdir /var/lib/pgsql/log && \
-            chown -R postgres:postgres /var/lib/pgsql/data && \
-            chown -R postgres:postgres /var/lib/pgsql/log && \
-            chmod u+x  /docker-entrypoint.sh && \
-            chmod +x /docker-entrypoint-initdb.d/create_db.sh
+RUN chmod a+xr /docker-entrypoint.sh;
 
 USER postgres
 
@@ -29,3 +28,4 @@ STOPSIGNAL SIGINT
 EXPOSE 5432
 
 CMD ["/usr/pgsql-14/bin/postgres"]
+
