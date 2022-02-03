@@ -8,10 +8,10 @@
 /usr/pgsql-14/bin/pg_ctl -D "/var/lib/pgsql/data" -o "-c listen_addresses='*'" -w start
 
 # create a user or role
-psql -d postgres -c "CREATE USER ${POSTGRES_USER} WITH PASSWORD '${POSTGRES_PASSWORD}';" 
+psql -d postgres -c "CREATE USER ${POSTGRESQL_USER} WITH PASSWORD '${POSTGRESQL_PASSWORD}';" 
 
 # create database 
-psql -v ON_ERROR_STOP=1 -d postgres -c "CREATE DATABASE ${POSTGRES_DATABASE} OWNER '${POSTGRES_USER}';"
+psql -v ON_ERROR_STOP=1 -d postgres -c "CREATE DATABASE ${POSTGRESQL_DATABASE} OWNER '${POSTGRESQL_USER}';"
 
 # stop internal postgres server
 /usr/pgsql-14/bin/pg_ctl -D "/var/lib/pgsql/data" -m fast -w stop -l /var/lib/pgsql/log/stdout
