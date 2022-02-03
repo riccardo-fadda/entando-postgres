@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-POSTGRES="psql --username ${POSTGRESQL_USER}"
+POSTGRES="psql --username '${POSTGRESQL_USER}'"
 
 echo "Creating database: ${POSTGRESQL_DATABASE}"
 
