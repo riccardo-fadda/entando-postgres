@@ -1,0 +1,29 @@
+FROM rockylinux:8.5
+
+ENV PGDATA /var/lib/pgsql/data
+ENV POSTGRESQL_USER=${POSTGRESQL_USER}
+ENV POSTGRESQL_PASSWORD=${POSTGRESQL_PASSWORD}
+ENV POSTGRESQL_DATABASE=${POSTGRESQL_DATABASE}
+ENV POSTGRESQL_ADMIN_PASSWORD=${POSTGRESQL_ADMIN_PASSWORD}
+ENV PATH $PATH:/usr/lib/pgsql/bin
+
+RUN dnf update -y && \
+            dnf install -y \
+              https://download.postgresql.org/pub/repos/yum/14/redhat/rhel-8-x86_64/postgresql14-server-14.1-1PGDG.rhel8.x86_64.rpm \
+              https://download.postgresql.org/pub/repos/yum/14/redhat/rhel-8-x86_64/postgresql14-libs-14.1-1PGDG.rhel8.x86_64.rpm \
+              https://download.postgresql.org/pub/repos/yum/14/redhat/rhel-8-x86_64/postgresql14-14.1-1PGDG.rhel8.x86_64.rpm \
+              https://download.postgresql.org/pub/repos/yum/14/redhat/rhel-8-x86_64/postgresql14-contrib-14.1-1PGDG.rhel8.x86_64.rpm
+
+COPY docker-entrypoint.sh /
+RUN chmod a+xr /docker-entrypoint.sh;
+
+USER postgres
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
+STOPSIGNAL SIGINT
+
+EXPOSE 5432
+
+CMD ["/usr/pgsql-14/bin/postgres"]
+
