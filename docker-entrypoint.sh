@@ -7,22 +7,22 @@ if [ -f "$PGDATA/initialized" ]; then
 else
   # REQUIRED VARS CHECK
   [[ -z "${POSTGRESQL_DATABASE}" || "${POSTGRESQL_DATABASE}" == *'"'* ]] && {
-    echo "Invalid POSTGRESQL_DATABASE" 1>&2
+    echo "POSTGRESQL_DATABASE is invalid or missing" 1>&2
     exit 1
   }
 
   [[ -z "${POSTGRESQL_USER}" || "${POSTGRESQL_USER}" == *'"'* ]] && {
-    echo "Invalid POSTGRESQL_USER" 1>&2
+    echo "POSTGRESQL_USER is invalid or missing" 1>&2
     exit 1
   }
 
   [[ -z "${POSTGRESQL_PASSWORD}" || "${POSTGRESQL_PASSWORD}" == *'"'* ]] && {
-    echo "Invalid POSTGRESQL_PASSWORD" 1>&2
+    echo "POSTGRESQL_PASSWORD is invalid or missing" 1>&2
     exit 1
   }
 
   [[ "${POSTGRESQL_ADMIN_PASSWORD}" == *"'"* ]] && {
-    echo "Invalid POSTGRESQL_ADMIN_PASSWORD" 1>&2
+    echo "POSTGRESQL_ADMIN_PASSWORD is invalid" 1>&2
     exit 1
   }
 
