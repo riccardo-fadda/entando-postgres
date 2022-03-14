@@ -10,6 +10,7 @@ ENV PATH $PATH:$PGDATA
 
 RUN dnf update -y && \
             dnf install -y \
+              langpacks-en glibc-all-langpacks -y \
               https://download.postgresql.org/pub/repos/yum/14/redhat/rhel-8-x86_64/postgresql14-server-14.1-1PGDG.rhel8.x86_64.rpm \
               https://download.postgresql.org/pub/repos/yum/14/redhat/rhel-8-x86_64/postgresql14-libs-14.1-1PGDG.rhel8.x86_64.rpm \
               https://download.postgresql.org/pub/repos/yum/14/redhat/rhel-8-x86_64/postgresql14-14.1-1PGDG.rhel8.x86_64.rpm \
